@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>의료 정보 웹페이지</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+    header {
+            text-align: center;
+            margin: auto;
+            padding-top: 110px;
+            width : 90%;
+            font-size: 80px;
+            font-weight: bold;
+            color: #004292;
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+    header > p {                   
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+    h1 {
+      font-size: 20px;
+      font-family: 'Gowun Dodum', sans-serif;
+      color: #306db8;
+      margin: 0;
+    }
+
+    body {
+      height: 100vh;
+      margin: 0;
+    }
+    .wrapper {
+      background: linear-gradient(to bottom, #ffffff, #97c6ff);
+      text-align: center;
+      align-items: center;
+      height: 100%;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      margin: auto;
+    }
+
+    .button {
+      width: 300px;
+      height: 300px;
+      border-radius: 10px;
+      background-color: #ffffff;
+      margin: 30px;
+      margin-top: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s, background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #f2f2f2;
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    .button img {
+      width: 250px;
+      height: 250px;
+    }
+
+    .button span {
+      font-weight: bold;
+      letter-spacing: 2px;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-weight: bolder;
+      font-size: 32px;
+      color: #004292;
+      margin-top: 0;
+    }
+
+    .login_input {
+      width: 100px;
+      float: right;
+      margin-top: 10px;
+      margin-left: 3px;
+    }
+
+    .button_login {
+      background-color: #ffffff;
+      color: #333333;
+      float: right;
+      height: 22px;
+      font-size: 12px;
+      margin-top: 10px;
+      margin-left: 5px;
+      margin-right: 10px;
+    }
+
+    .title {
+        font-family: sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        color: #333333;
+        margin-top: 30px;
+        text-align: center;
+    }
+
+    .content {
+      font-family: 'Gowun Dodum', sans-serif;
+      font-size: 14px;
+      color: rgb(67, 59, 120);
+      margin-top: 20px;
+    }
+
+    footer { 
+      margin-top: auto;
+      font-family: 'Gowun Dodum', sans-serif;
+      font-weight: bold;
+      font-size: 13px;
+      color: #666666;
+      text-align: center;
+      padding: 10px;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .login-message {
+      float: right;
+      margin-right: 10px;
+      font-size: 17px;
+      font-family: 'Gowun Dodum', sans-serif;
+      color: #004292;
+      margin-top: 10px;
+      margin-right: 13px;
+    }
+
+    @media (max-width: 900px) {
+      header {
+        padding-top: 40px;
+        font-size: 36px;
+      }
+
+      h1 {
+        font-size: 14px;
+      }
+
+      .button {
+        width: 150px;
+        height: 150px;
+        margin: 10px;
+      }
+
+      .button img {
+        width: 100px;
+        height: 100px;
+      }
+
+      .button span {
+        font-size: 18px;
+        margin-top: 5px;
+      }
+    }
+  </style>
+
+  <script>
+  // 입력 형식이 잘못되었을 때, 경고창 띄우기
+
+    function login(){
+      document.getElementById("login").addEventListener("click", function() {
+        var id = document.getElementById("id").value;
+        var password = document.getElementById("password").value;
+
+        var nonEnglishRegex = /^[A-Za-z0-9]+$/;
+        if (!nonEnglishRegex.test(id) || !nonEnglishRegex.test(password)) {
+          alert("올바른 형식으로 입력해주세요. 아이디와 비밀번호는 영어와 숫자의 입력만 허용됩니다.");
+
+          document.getElementById("id").value = ""
+          document.getElementById("password").value = ""
+
+          return;
+        }
+
+        if (id != '' && password != '') {
+          var loginContainer = document.getElementById("login-container");
+          var message = document.createElement("div"); 
+          message.className = "login-message";
+          message.innerText = id + '님, 안녕하세요!';
+          loginContainer.innerHTML = '';
+          loginContainer.appendChild(message);
+        }
+      });
+    }
+
+    // 네트워크 연결이 해제되었을 때, 경고창 띄우기
+
+    function checkNetworkStatus() {
+      
+      if (!navigator.onLine) {
+        alert("네트워크 연결이 해제되었습니다. 다시 연결 후 이용해주세요.");
+        return false;
+      }
+      return true;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const personButton = document.querySelector('.button:nth-of-type(1)');
+      document.getElementById("person-button").addEventListener('click', handlePersonButtonClick);
+
+      const petButton = document.querySelector('.button:nth-of-type(2)');
+      document.getElementById("pet-button").addEventListener('click', handlePetButtonClick);
+    });
+
+    function handlePersonButtonClick(event) {
+      event.preventDefault();
+      if (checkNetworkStatus()) {
+        window.location.href='term-person.html'
+      
+
+        const img = document.querySelector('.button img');
+        img.src = 'loading_icon.gif';
+
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.8) {
+          window.location.href='term-person.html'
+        } else {
+          alert("네트워크 연결이 해제되었습니다. 네트워크 연결 상태를 다시 확인한 후 이용해주세요.");
+          img.src = 'person.png';
+        }
+      }
+    }
+
+    function handlePetButtonClick(event) {
+      event.preventDefault();
+      if (checkNetworkStatus()) {
+        window.location.href='term-pet.html'
+
+        const img = document.querySelector('.button img');
+        img.src = 'loading_icon.gif';
+
+        const randomNumber = Math.random();
+
+        if (randomNumber < 0.8) {
+          window.location.href='term-pet.html';
+        } else {
+          alert("네트워크 연결이 해제되었습니다. 네트워크 연결 상태를 다시 확인한 후 이용해주세요.");
+          img.src = 'pet.png';
+        }
+      }
+    }
+    
+    var ajaxhttp = new XMLHttpRequest(); //전체 행사 수를 가져오기 위한 ajax를 사용하기 위해 변수를 선언한다.     
+    ajaxhttp.onreadystatechange = function(){ 
+        if(ajaxhttp.readyState == 4 && ajaxhttp.status == 200){ //행사 목록을 가져오기 위한 통신에 성공하면 
+            jsonhttp = JSON.parse(ajaxhttp.responseText); //받은 데이터를 JSON으로 파싱한다.
+            console.log(jsonhttp['getTblAnimalHospital']['body']['items']['item'][0]['gugun']);
+        }
+    }
+    ajaxhttp.open("GET", "http://apis.data.go.kr/6260000/BusanAnimalHospService/getTblAnimalHospital?serviceKey=JGfgJMUxG7LRicra1%2B4WOD1AIfFK4UAY%2BMoGAsXcSc8QOX1mf7dIDgg1zQC8c4OY7cQVVhCCMaeH6ChDITzNfA%3D%3D&pageNo=1&numOfRows=10&resultType=JSON", true); 
+    ajaxhttp.send();
+  </script>
+
+</head>
+<body>
+  <div id="login-container">
+    <input type="button" id="login" value="로그인" onclick = login() class="button_login"/>
+    <input type="txt" id="password" placeholder="비밀번호" class="login_input"/>
+    <input type="txt" id="id" placeholder="아이디"  class="login_input"/>
+  </div>
+  <div class="wrapper">
+    <header><p>MEDIMATCH</p></header>
+    <h1>맞춤형 병원 검색</h1>
+    <div class="button-container">
+      <div class="button" onclick="window.location.href='term-person.html'" id="person-button">
+        <img src="person.png" alt="Person Icon">
+        <span>PERSON</span>
+      </div>
+      <div class="button" onclick="window.location.href='term-pet.html'" id="pet-button">
+        <img src="pet.png" alt="Dog Icon">
+        <span>PET</span>
+      </div>
+    </div>
+  </div>
+  <footer>
+      &copy; 2023 All Rights Reserved. | 의료 정보 웹페이지 | KIM YUN YEONG
+  </footer>
+</body>
+</html>

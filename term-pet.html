@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>동물 의료 정보 웹페이지</title>
+        <meta charset="utf-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+            * {
+                margin: 0;
+                padding: 0;
+            }
+
+            
+            body {
+                background: linear-gradient(to bottom, #ffffff, #97c6ff);
+                height: 100vh;
+                font-family: 'Gowun Dodum', sans-serif;
+            }
+
+            .search-container {
+                margin-top: 10px;
+                padding: 20px;
+                width: 660px;
+                display: flex; 
+                margin-left: 150px;
+                margin-right: 0;
+            }
+
+            .search-container::after {
+                content: '';
+                display: block;
+                clear: both;
+            }
+
+            .search-input {
+                flex: 1; 
+                /* 입력 창이 확장하여 사용가능한 공간을 채울 수 있게 함 
+                flex: 1;을 .search-input에 적용하면 입력 창이 부모 요소인 .search-container의 가용 가능한 공간을 모두 차지하도록 확장됨.
+                따라서 입력 창은 버튼과 함께 가로로 정렬되고, 버튼이 입력 창 옆에 위치하게 됨 */
+                padding: 10px;
+                font-size: 16px;
+                font-family: 'Gowun Dodum', sans-serif;
+            }
+
+            .search-button {
+                padding: 9px;
+                font-size: 14px;
+                margin-left: 6px;
+            }
+
+            a {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            ul, li {
+                list-style: none;
+            }
+
+            header {
+                float: left;
+                margin-left: 165px;
+            }
+
+            header .title {
+                float: left;
+                color: #004292;
+                font-weight: bold;
+                font-size: 30px;
+                font-family: 'Gowun Dodum', sans-serif;
+                margin-left: 10px;
+                margin-top: 19px;
+            }
+
+            header .title::first-line {
+                color: #306db8;
+            }
+
+            header > div {
+                width: 90%;
+                min-width: 1000px;
+                max-width: 1200px;
+                height: 80px;
+                margin: 0 auto;
+            }
+
+            header .logo {
+                float: left;
+            }
+
+            header .logo img {
+                height: 70px;
+                margin-top: 7px;
+            }
+
+            nav {
+                float: right;
+                margin-top: 28px;
+            }
+
+            nav a {
+                margin-right: 60px;
+                color: #004292;
+            }
+
+            hr {
+                clear: both;
+                background-color: #ddd;
+                height: 1px;
+                border: 0;
+            }
+
+            header .gnb li {
+                display: inline-block;
+                margin-top: 28px;
+                margin-left: 30px;
+                color: #004292;
+                font-family: 'Gowun Dodum', sans-serif;
+                font-weight: bold;
+            }
+
+            header .gnb li:first-child {
+                margin-left: 0;
+            }
+
+            .footer {
+                margin-top: auto;
+                font-family: 'Gowun Dodum', sans-serif;
+                font-weight: bold;
+                font-size: 13px;
+                color: #666666;
+                text-align: center;
+                padding: 10px;
+                position: fixed;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+            }
+
+            #content-wrapper {
+                display: flex;
+            }
+
+            #table-wrapper {
+                width: 50%;
+            }
+
+            #map {
+                width: 50%;
+                margin-left: 100px;
+            }
+
+            #table {
+                width: 87%;
+                margin-left: 165px;
+            }   
+
+            table {
+                border-top: 2px solid rgb(131, 131, 131);
+                border-collapse: collapse;
+                margin: 0% 4% 0% 6%;
+                table-layout: fixed;
+                font-size: 14px;
+                font-family: 'Gowun Dodum', sans-serif;
+                text-align: center;
+                width: 90%;
+            }
+
+            th, td {
+            border-bottom: 1px solid rgb(147, 147, 147);
+            padding: 2% 0 2% 0;
+            width: 90%;
+            }
+
+            tbody {
+                display: block;
+                overflow-y: scroll;
+                overflow-x: none;
+                max-height: 550px;
+
+            }
+
+            thead, tbody tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+
+            [class|="search"] {
+                color: #004292;
+                font-family: 'Gowun Dodum', sans-serif;
+                font-weight: bold;
+            }
+
+            @media only screen and (max-width: 900px) {
+                header .title {
+                    font-size: 20px;
+                    max-width: 23%;
+                    margin-left: 0;
+                    text-align: left;
+                }
+
+                header {
+                    float: none;
+                    margin-left: 0;
+                    text-align: center;
+                }
+
+                .search-container {
+                    width: 90%;
+                    margin-left: 0;
+                }
+
+                #table-wrapper {
+                    width: 100%;
+                }
+
+                #map {
+                    width: 100%;
+                    margin-left: 0;
+                    display: none;
+                }
+
+                #table {
+                    margin: auto;
+                }
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div id="wrap">
+            <header>
+                <div>
+                    <a href="#" class="logo"><img src="pet.png" alt=로고></a>
+                    <p class="title">PET MEDIMATCH : 동물 의료 정보 웹페이지</p>
+                </div>
+            </header>
+            <nav class="gnb">
+                <a href="term-project.html">HOME</a>
+                <a href="term-person.html">PERSON</a>
+                <a href="term-pet.html">PET</a>
+            </nav>
+        </div>
+        <hr>
+
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="지역 구/군을 입력하세요.">
+            <button id="search-button" class="search-button" onclick="searchKeywords()">검색</button>
+        </div>
+        
+        <div id="content-wrapper">
+            <div id="table-wrapper">
+                <table id="table">
+                    <thead>
+                        <tr>
+                            <th>병원명</th>
+                            <th>상세주소</th>
+                            <th>연락처</th>
+                            <th>지도</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                        <tr>
+                            <td colspan="4">검색 결과가 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="map" style="width: 600px; height: 600px;"></div>
+        </div>
+
+        <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e29eafb25c78183fd1cf3711731e93d3"></script>
+        <script>
+            var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+            var options = { //지도를 생성할 때 필요한 기본 옵션
+                center: new kakao.maps.LatLng(35.2323314, 129.0814828), //지도의 중심좌표.
+                level: 3 //지도의 레벨(확대, 축소 정도)
+            };
+        
+            var map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리턴
+
+            var ajaxhttp = new XMLHttpRequest(); //전체 행사 수를 가져오기 위한 ajax를 사용하기 위해 변수를 선언한다.     
+            ajaxhttp.onreadystatechange = function() { 
+                if (ajaxhttp.readyState == 4 && ajaxhttp.status == 200) { //행사 목록을 가져오기 위한 통신에 성공하면 
+                    jsonhttp = JSON.parse(ajaxhttp.responseText); //받은 데이터를 JSON으로 파싱한다.
+                    json = jsonhttp['getTblAnimalHospital']['body']['items']['item'];
+                    console.log(jsonhttp['getTblAnimalHospital']['body']['items']['item']);
+                    var positions = [];
+                    for (var i=0; i<json.length; i++) {
+                        positions.push ({title: json[i]["animal_hospital"], latlng: new kakao.maps.LatLng(json[i]['lat'], json[i]['lon'])});
+                    }
+                    for (var i=0; i<positions.length; i++) {
+                        
+                        // 마커 생성
+
+                        var marker = new kakao.maps.Marker({
+                            map: map, // 마커를 표시할 지도
+                            position: positions[i].latlng, // 마커를 표시할 위치
+                            title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                        });
+                    }
+                }
+            }
+            ajaxhttp.open("GET", "http://apis.data.go.kr/6260000/BusanAnimalHospService/getTblAnimalHospital?serviceKey=JGfgJMUxG7LRicra1%2B4WOD1AIfFK4UAY%2BMoGAsXcSc8QOX1mf7dIDgg1zQC8c4OY7cQVVhCCMaeH6ChDITzNfA%3D%3D&pageNo=1&numOfRows=300&resultType=JSON", true);
+            ajaxhttp.send();
+
+            function searchKeywords() {
+                let value = document.getElementById('search-input').value;
+                var count = 0;
+                var window_size = $(window).width();
+
+                $('#tbody').empty();
+
+                for (var i = 0; i<json.length; i++) {
+                    var address = json[i]['road_address']
+                    var hospital_nm = json[i]['animal_hospital'];
+                    
+                    if (address.includes(value) || hospital_nm.includes(value)) {
+                        console.log(1)
+                        count += 1;
+
+                        var tel = json[i]['tel'];
+                        var lat = json[i]['lat'];
+                        var lon = json[i]['lon'];
+
+                        console.log(hospital_nm, address, tel, lat, lon);
+
+                        var tr = document.createElement('tr');
+                        var td1 = document.createElement('td');
+                        var td2 = document.createElement('td');
+                        var td3 = document.createElement('td');
+                        var td4 = document.createElement('td'); 
+                        
+                        td1.appendChild(document.createTextNode(hospital_nm));
+                        td2.appendChild(document.createTextNode(address));
+                        td3.appendChild(document.createTextNode(tel));
+
+                        // 버튼 생성
+                        var button = document.createElement('button');
+                        button.textContent = '지도 바로가기'
+
+                        // 버튼 클릭 이벤트 생성
+                        button.addEventListener('click', function(lat, lon) {
+                            return function() {
+                                // 상세 주소를 클릭한 경우 원하는 동작 수행
+                                if (window_size < 900) {
+                                    var win = window.open('https://map.kakao.com/link/map/'+lat+','+lon, '_blank');
+                                    win.focus();
+                                }
+
+                                var clickedAddress = this.parentNode.parentNode.childNodes[1].textContent;
+                                console.log(clickedAddress);
+                                map.setLevel(2); // 지도 크기
+                                var moveLatLon = new kakao.maps.LatLng(lat, lon);      
+                                map.panTo(moveLatLon);   
+                            
+                                };
+                            }(lat, lon));
+            
+                        td4.appendChild(button);                
+                    
+                        tr.appendChild(td1);
+                        tr.appendChild(td2);
+                        tr.appendChild(td3);
+                        tr.appendChild(td4);            
+            
+                        var tbody = document.getElementsByTagName("tbody")[0];
+            
+                        tbody.appendChild(tr);
+                    }
+                }
+
+                if (count == 0) { 
+                    var tr = document.createElement('tr');
+                    var td1 = document.createElement('td');
+
+                    td1.appendChild(document.createTextNode('검색 결과가 없습니다.'));
+                    
+                    td1.colSpan = '4';
+
+                    tr.appendChild(td1);
+
+                    var tbody = document.getElementsByTagName('tbody')[0];
+
+                    tbody.appendChild(tr)
+                }
+            }
+            // enter 치면 버튼 클릭됨
+            document.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    document.getElementById("search-button").click();
+                }
+            });
+
+        </script>
+
+        <footer>
+            <div class="footer">
+              &copy; 2023 All Rights Reserved. | 의료 정보 웹페이지 |   KIM YUN YEONG
+            </div>
+        </footer>
+    </body>
+</html>
